@@ -1,4 +1,5 @@
 import { Hono } from 'hono'
+import { billShares, homeBills } from './bills'
 import { homes } from './homes'
 import { HttpError } from './http'
 
@@ -7,6 +8,8 @@ const app = new Hono<{ Bindings: Env }>()
 app.get('/api/health', (c) => c.json({ status: 'ok' }))
 
 app.route('/api/homes', homes)
+app.route('/api/homes', homeBills)
+app.route('/api/bills', billShares)
 
 app.notFound((c) => c.json({ error: 'Not found' }, 404))
 
