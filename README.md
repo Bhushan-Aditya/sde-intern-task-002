@@ -155,3 +155,9 @@ You must understand every line you submit. We check this with your video and in 
 5. Paste the repository link and the video link in the application form.
 
 We will run `pnpm install && pnpm check && pnpm typecheck && pnpm test` on your repository.
+
+## Decisions
+
+1. **Paying is one atomic `UPDATE ... WHERE paid_at IS NULL`.** Only one concurrent request can match, with no gap between check and write. The key is stored on the share, so only the successful payment is remembered. That is enough because a share can be paid only once.
+2. **Member order is an `AUTOINCREMENT` column.** The split depends on this order, and UUIDs have none while timestamps can tie.
+3. **The database enforces the rules too.** A bill and its shares are written in one D1 batch, and named constraints reject bad data even if the API code has a bug.
